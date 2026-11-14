@@ -15,6 +15,16 @@ async function submitWish() {
     return;
   }
 
+  if (name.length > 20) {
+    alert("Name cannot exceed 20 characters.");
+    return;
+    }
+
+    if (message.length > 50) {
+        alert("Wish cannot exceed 50 characters.");
+        return;
+    }
+
   const { error } =
     await supabaseClient
       .from("wishes")

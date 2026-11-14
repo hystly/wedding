@@ -9,6 +9,10 @@ document
 
 });
 
+let wishesData = [];
+let currentWishIndex = 0;
+let wallStarted = false;
+
 loadWishes();
 
 supabaseClient
@@ -41,38 +45,75 @@ async function loadWishes() {
     return;
   }
 
-  showMostLovedWish(data);
+    showMostLovedWish(data);
 
-  const wishWall =
-    document.getElementById("wishWall");
+    wishesData = data;
 
-  wishWall.innerHTML = "";
+    if (!wallStarted) {
+        wallStarted = true;
+        startWall();
+    }
+}
 
-  data.forEach((wish, index) => {
+function getNextWish() {
+
+    const wish =
+        wishesData[currentWishIndex];
+
+    currentWishIndex++;
+
+    if (
+        currentWishIndex >=
+        wishesData.length
+    ) {
+        currentWishIndex = 0;
+    }
+
+    return wish;
+}
+
+function startWall() {
+
+    for (let lane = 0; lane < 5; lane++) {
+
+        setTimeout(() => {
+
+            launchWish(lane);
+
+        }, lane * 3000);
+
+    }
+
+}
+
+function launchWish(lane) {
+
+    if (!wishesData.length) return;
+
+    const wish =
+        getNextWish();
 
     const likedWishes =
-    JSON.parse(
+      JSON.parse(
         localStorage.getItem(
-        "likedWishes"
+          "likedWishes"
         ) || "[]"
-    );
+      );
 
-    const alreadyLiked = likedWishes.includes(wish.id);
-    const lane = index % 5;
-    const top = 30 + lane * 150;
-    const leftOffset = index * 400;
-    const duration = 40;
+    const alreadyLiked =
+      likedWishes.includes(wish.id);
 
-    wishWall.innerHTML += `
-    <div
-        class="floating-wish"
-        style="
-        top:${top}px;
-        left:-${leftOffset}px;
-        animation-duration:${duration}s;
-    ">
+    const laneEl =
+      document.getElementById(
+        `lane${lane}`
+      );
 
-        <strong>${wish.name}</strong>
+    laneEl.innerHTML = `
+      <div class="floating-wish">
+
+        <strong>
+          ${wish.name}
+        </strong>
 
         <br><br>
 
@@ -81,19 +122,22 @@ async function loadWishes() {
         <br><br>
 
         <button
-        class="like-button"
-        ${alreadyLiked ? "disabled" : ""}
-        onclick="likeWish(${wish.id})">
+          class="like-button"
+          ${alreadyLiked ? "disabled" : ""}
+          onclick="likeWish(${wish.id})">
 
-        ❤️ ${wish.likes || 0}
-
-        ${alreadyLiked ? "You liked" : ""}
+          ❤️ ${wish.likes || 0}
 
         </button>
 
-    </div>
+      </div>
     `;
-  });
+
+    setTimeout(() => {
+
+    launchWish(lane);
+
+    }, 12000);
 
 }
 
@@ -183,7 +227,7 @@ async function likeWish(id) {
         JSON.stringify(likedWishes)
     );
 
-    loadWishes();
+    // loadWishes();
 
 }
 
