@@ -1,15 +1,3 @@
-const supabaseUrl =
-  "https://pmhkpooixevbljjwgpga.supabase.co";
-
-const supabaseKey =
-  "sb_publishable_LHeI9dqWn2qSkIXHDIlQJQ_LbZfMF0a";
-
-const supabaseClient =
-  supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
-
 document
   .getElementById("submitWish")
   .addEventListener("click", submitWish);
