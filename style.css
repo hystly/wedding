@@ -12,7 +12,7 @@ body {
     height: 100vh;
     background-image: url("./images/hero-2.jpeg");
     background-size: cover;
-    background-position: center;
+    background-position: 55% center;
     position: relative;
 }
 
@@ -37,6 +37,8 @@ body {
 h1 {
     font-size: clamp(2.5rem, 8vw, 5rem);
     margin: 15px 0;
+    max-width: 90%;
+    line-height: 1.2;
 }
 
 h3 {
@@ -46,6 +48,13 @@ h3 {
 
 p {
     font-size: clamp(1rem, 2vw, 1.3rem);
+    max-width: 80%;
+    margin: 0 auto 20px;
+}
+
+.heart {
+    color: #d94b61;
+    font-size: 0.95em;
 }
 
 .tabs {
@@ -55,15 +64,10 @@ p {
 .tabs a {
     text-decoration: none;
     color: white;
-
     padding: 12px 24px;
-
     border: 1px solid rgba(255,255,255,0.5);
-
     border-radius: 999px;
-
     margin: 0 10px;
-
     transition: 0.3s;
 }
 
@@ -75,4 +79,198 @@ p {
 section {
     padding: 80px 20px;
     text-align: center;
+}
+
+@media (max-width: 768px) {
+
+    h1 {
+        font-size: 3rem;
+        line-height: 1.2;
+    }
+
+    h3 {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+}
+
+
+
+
+#wishes {
+    padding: 80px 20px;
+}
+
+.wish-wall {
+
+    position: relative;
+
+    height: 600px;
+
+    overflow: hidden;
+
+    background: linear-gradient(
+        180deg,
+        #fffdf8,
+        #f8efe2
+    );
+
+    border: 2px solid #d4af7a;
+
+    border-radius: 24px;
+
+    margin-top: 40px;
+}
+
+.wish-item {
+    background: #fff;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,.1);
+}
+
+.wish-button {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(
+        135deg,
+        #d4af7a,
+        #b88a44
+    );
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.25);
+
+    transition: all .3s ease;
+}
+
+.wish-button:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.35);
+}
+
+@keyframes drift {
+
+    from {
+        transform: translateX(-350px);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 350px));
+    }
+}
+
+.floating-wish {
+
+    position: absolute;
+
+    min-width: 220px;
+    max-width: 320px;
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.12);
+
+    animation-name: drift;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* Wish Form Page */
+.wish-form-page {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background: #fff9f2;
+}
+
+
+.wish-form-page h1 {
+    font-size: clamp(2rem, 8vw, 4rem);
+    margin-bottom: 10px;
+}
+
+.wish-form-page input,
+.wish-form-page textarea {
+    width: 100%;
+    max-width: 600px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 1.5rem;
+    background: #f5f5f5;
+    border: 1px solid #d8d8d8;
+}
+
+.wish-form-page input:focus,
+.wish-form-page textarea:focus {
+
+    outline: none;
+
+    border-color: #d4af7a;
+
+    box-shadow:
+        0 0 0 4px rgba(212,175,122,.15);
+}
+
+.wish-form-page input::placeholder,
+.wish-form-page textarea::placeholder {
+    color: #8a8a8a;
+}
+
+.wish-form-page input,
+.wish-form-page textarea,
+.wish-button {
+    box-sizing: border-box;
+}
+
+.wish-form-page textarea {
+
+    min-height: 220px;
+}
+
+
+@media (max-width: 768px) {
+    .wish-form-page {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .wish-form-page input,
+    .wish-form-page textarea,
+    .wish-button {
+        width: 100%;
+        max-width: none;
+    }
+
+    .wish-form-page input,
+    .wish-form-page textarea,
+    .wish-button {
+        width: calc(100vw - 24px);
+        max-width: none;
+    }
+
 }
