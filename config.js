@@ -4,6 +4,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_LHeI9dqWn2qSkIXHDIlQJQ_LbZfMF0a";
 
+const PHOTO_BUCKET = "wedding-photos";
+
 const { createClient } = supabase;
 
 const supabaseClient =

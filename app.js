@@ -9,6 +9,17 @@ document
 
 });
 
+document
+  .getElementById("photoButton")
+  .addEventListener(
+    "click",
+    () => {
+
+      window.location.href =
+      "./submit-photo.html";
+
+});
+
 let wishesData = [];
 let currentWishIndex = 0;
 let wallStarted = false;
@@ -240,3 +251,93 @@ async function likeWish(id) {
 
 }
 
+let photosData = [];
+let currentPhotoIndex = 0;
+let photoWallStarted = false;
+
+loadPhotos();
+
+async function loadPhotos() {
+
+    const { data, error } =
+      await supabaseClient
+      .from("photos")
+      .select("*")
+      .order(
+        "created_at",
+        { ascending: false }
+      );
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    photosData = data;
+
+    if (!photoWallStarted) {
+        photoWallStarted = true;
+        startPhotoWall();
+    }
+}
+
+function startPhotoWall() {
+
+  for (
+      let lane = 0;
+      lane < 3;
+      lane++
+  ) {
+
+      setTimeout(() => {
+
+          launchPhoto(lane);
+
+      }, lane * JS_CONFIG.WISH_INTERVAL);
+
+  }
+
+}
+
+function launchPhoto(lane) {
+
+    if (!photosData.length) return;
+
+    const photo =
+      photosData[currentPhotoIndex];
+
+    currentPhotoIndex++;
+
+    if (
+      currentPhotoIndex >=
+      photosData.length
+    ) {
+      currentPhotoIndex = 0;
+    }
+
+    const laneEl =
+      document.getElementById(
+        `photoLane${lane}`
+      );
+
+    laneEl.innerHTML = `
+      <div class="floating-photo">
+
+        <img
+          src="${photo.image_url}"
+          alt="photo">
+
+        <p>
+          ${photo.uploader_name}
+        </p>
+
+      </div>
+    `;
+
+    setTimeout(() => {
+
+      launchPhoto(lane);
+
+    }, JS_CONFIG.WISH_INTERVAL);
+
+}
