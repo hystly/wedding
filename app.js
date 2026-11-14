@@ -20,7 +20,7 @@ supabaseClient
   .on(
     'postgres_changes',
     {
-      event: 'INSERT',
+      event: '*',
       schema: 'public',
       table: 'wishes'
     },
@@ -74,7 +74,7 @@ function getNextWish() {
 
 function startWall() {
 
-    for (let lane = 0; lane < 5; lane++) {
+    for (let lane = 0; lane < JS_CONFIG.LANE_COUNT; lane++) {
 
         setTimeout(() => {
 
@@ -126,7 +126,11 @@ function launchWish(lane) {
           ${alreadyLiked ? "disabled" : ""}
           onclick="likeWish(${wish.id})">
 
-          ❤️ ${wish.likes || 0}
+          ${
+            alreadyLiked
+            ? `❤️ Liked • ${wish.likes || 0}`
+            : `♡ ${wish.likes || 0}`
+        }
 
         </button>
 
@@ -137,7 +141,7 @@ function launchWish(lane) {
 
     launchWish(lane);
 
-    }, 12000);
+    }, JS_CONFIG.WISH_INTERVAL);
 
 }
 
@@ -183,23 +187,14 @@ function showMostLovedWish(data) {
 
 async function likeWish(id) {
 
+     console.log("LIKE CLICKED", id);
+
     const likedWishes =
     JSON.parse(
       localStorage.getItem(
         "likedWishes"
       ) || "[]"
     );
-
-    const alreadyLiked = likedWishes.includes(id);
-
-    if (likedWishes.includes(id)) {
-
-        alert(
-        "You have already liked this wish ❤️"
-        );
-
-        return;
-    }
 
     const { data, error } =
         await supabaseClient
@@ -220,12 +215,26 @@ async function likeWish(id) {
         })
         .eq("id", id);
 
-        likedWishes.push(id);
+    likedWishes.push(id);
 
     localStorage.setItem(
         "likedWishes",
         JSON.stringify(likedWishes)
     );
+
+    const button =
+    document.querySelector(
+        `button[onclick="likeWish(${id})"]`
+    );
+
+    if (button) {
+    button.disabled = true;
+    button.innerHTML = `❤️ Liked • ${(data.likes || 0) + 1}`;
+    }
+
+    // alert(
+    // "❤️ Thank you! Your like has been recorded."
+    // );
 
     // loadWishes();
 

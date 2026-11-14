@@ -11,4 +11,10 @@ const supabaseClient =
     SUPABASE_URL,
     SUPABASE_KEY
   );
-  
+
+const JS_CONFIG = {
+    MAX_NAME_LENGTH: 20,
+    MAX_MESSAGE_LENGTH: 50,
+    WISH_INTERVAL: 12000,
+    LANE_COUNT: 5
+};

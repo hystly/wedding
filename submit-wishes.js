@@ -2,26 +2,32 @@ document
   .getElementById("submitWish")
   .addEventListener("click", submitWish);
 
+document
+  .getElementById("name")
+  .maxLength = JS_CONFIG.MAX_NAME_LENGTH;
+
+document
+  .getElementById("message")
+  .maxLength = JS_CONFIG.MAX_MESSAGE_LENGTH;
+
 async function submitWish() {
 
-  const name =
-    document.getElementById("name").value;
+  const name = document.getElementById("name").value;
 
-  const message =
-    document.getElementById("message").value;
+  const message = document.getElementById("message").value;
 
   if (!name || !message) {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  if (name.length > 20) {
-    alert("Name cannot exceed 20 characters.");
-    return;
+        alert("Please fill in all fields.");
+        return;
     }
 
-    if (message.length > 50) {
-        alert("Wish cannot exceed 50 characters.");
+  if (name.length > JS_CONFIG.MAX_NAME_LENGTH) {
+        alert(`Name cannot exceed ${JS_CONFIG.MAX_NAME_LENGTH} characters.`);
+        return;
+    }
+
+  if (message.length > JS_CONFIG.MAX_MESSAGE_LENGTH) {
+        alert(`Wish cannot exceed ${JS_CONFIG.MAX_MESSAGE_LENGTH} characters.`);
         return;
     }
 
