@@ -1,3 +1,8 @@
+window.addEventListener(
+  "load",
+  applyLanguage
+);
+
 document
   .getElementById("submitPhoto")
   .addEventListener(
@@ -17,15 +22,9 @@ document
 
   async function uploadPhoto() {
 
-    const file =
-      document
-      .getElementById("photo")
-      .files[0];
+    const file = document.getElementById("photo").files[0];
 
-    const name =
-      document
-      .getElementById("name")
-      .value;
+    const name = localStorage.getItem("username");
 
     if (!file) {
         alert("Please select a photo");

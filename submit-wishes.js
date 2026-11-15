@@ -1,3 +1,8 @@
+window.addEventListener(
+  "load",
+  applyLanguage
+);
+
 document
   .getElementById("submitWish")
   .addEventListener("click", submitWish);
@@ -12,19 +17,16 @@ document
     }
   );
 
-document
-  .getElementById("name")
-  .maxLength = JS_CONFIG.MAX_NAME_LENGTH;
 
 document
-  .getElementById("message")
+  .getElementById("blessingMsg")
   .maxLength = JS_CONFIG.MAX_MESSAGE_LENGTH;
 
 async function submitWish() {
 
-  const name = document.getElementById("name").value;
+  const name = localStorage.getItem("username");
 
-  const message = document.getElementById("message").value;
+  const message = document.getElementById("blessingMsg").value.trim();
 
   if (!name || !message) {
         alert("Please fill in all fields.");

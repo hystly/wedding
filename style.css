@@ -994,3 +994,208 @@ section {
     }
 
 }
+
+/* username */
+
+.username-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,.05);
+
+    backdrop-filter:
+        blur(4px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 9999;
+}
+
+#usernameInput {
+
+    width: 100%;
+
+    margin: 20px 0;
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    border: 1px solid #d8d8d8;
+
+    font-size: 1rem;
+}
+
+.username-box {
+
+    width: min(500px, 90vw);
+
+    padding: 30px;
+
+    background: #fffdf8;
+
+    border-radius: 24px;
+
+    border: 2px solid #d4af7a;
+
+    text-align: center;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 20px;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.15);
+}
+
+.username-box p {
+    max-width: 100%;
+    margin: 0;
+}
+
+.username-button {
+
+    width: 220px !important;
+
+    max-width: 220px;
+
+    font-size: 1.2rem;
+
+}
+
+/* Language Selection */
+.language-toggle {
+
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    z-index: 2000;
+
+}
+
+#langToggle {
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.2);
+
+    color: white;
+
+    backdrop-filter: blur(10px);
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+    transition: .3s;
+
+}
+
+#langToggle:hover {
+
+    background: rgba(255,255,255,.35);
+
+}
+
+.language-selector {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    margin: 10px 0 20px;
+}
+
+.lang-btn {
+
+    width: 110px;
+
+    height: 42px;
+
+    border-radius: 999px;
+
+    border: 1px solid #d4af7a;
+
+    background: white;
+
+    color: #b88a44;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+}
+
+.lang-btn.active {
+
+    background:
+      linear-gradient(
+        180deg,
+        #c3a661,
+        #b88a44
+      );
+
+    color: white;
+}
+
+englishBtn.addEventListener(
+  "click",
+  () => {
+
+      localStorage.setItem(
+        "language",
+        "en"
+      );
+
+      englishBtn.classList.add(
+        "active"
+      );
+
+      chineseBtn.classList.remove(
+        "active"
+      );
+
+      applyLanguage();
+  }
+);
+
+chineseBtn.addEventListener(
+  "click",
+  () => {
+
+      localStorage.setItem(
+        "language",
+        "zh"
+      );
+
+      chineseBtn.classList.add(
+        "active"
+      );
+
+      englishBtn.classList.remove(
+        "active"
+      );
+
+      applyLanguage();
+  }
+);

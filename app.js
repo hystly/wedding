@@ -1,13 +1,52 @@
 console.log("app.js loaded");
 
 document
-  .getElementById("wishButton")
+  .getElementById("englishBtn")
+  .addEventListener(
+  "click",
+  () => {
+
+      localStorage.setItem(
+        "language",
+        "en"
+      );
+
+      applyLanguage();
+
+  });
+
+document
+  .getElementById("chineseBtn")
+  .addEventListener(
+  "click",
+  () => {
+
+      localStorage.setItem(
+        "language",
+        "zh"
+      );
+
+      applyLanguage();
+
+  });
+
+document
+  .getElementById("sendWish")
   .addEventListener("click", function () {
 
     window.location.href =
       "./submit-wishes.html";
 
 });
+
+document
+.getElementById(
+    "saveUsername"
+)
+.addEventListener(
+"click",
+saveUsername
+);
 
 document
   .getElementById("photoButton")
@@ -20,6 +59,13 @@ document
 
 });
 
+document
+  .getElementById("langToggle")
+  .addEventListener(
+    "click",
+    switchLanguage
+  );
+
 // Wish constants
 let wishesData = [];
 let currentWishIndex = 0;
@@ -30,6 +76,267 @@ let photosData = [];
 let currentPhotoIndex = 0;
 let slideshowStarted = false;
 let slideshowTimer = null;
+
+/* Language Selection */
+let selectedLanguage = "en";
+
+window.addEventListener(
+  "load",
+  () => {
+  checkUsername();
+  applyLanguage();
+  }
+);
+
+window.addEventListener(
+  "load",
+  applyLanguage
+);
+
+function checkUsername(){
+
+  const username =
+    localStorage.getItem(
+      "username"
+    );
+
+  const language =
+    localStorage.getItem(
+      "language"
+    ) || "en";
+
+  if(username){
+
+      let greeting =
+        language === "zh"
+        ? `欢迎您，${username} 😊`
+        : `Welcome, ${username} 😊`;
+
+      document
+        .getElementById(
+          "welcomeUser"
+        )
+        .textContent =
+        greeting;
+
+      document
+        .getElementById(
+          "usernameModal"
+        )
+        .style.display =
+        "none";
+
+      return;
+  }
+}
+
+async function saveUsername(){
+
+    const username =
+      document
+      .getElementById(
+        "usernameInput"
+      )
+      .value
+      .trim();
+
+    if(!username){
+        alert(
+          "Please enter a username"
+        );
+        return;
+    }
+
+    if (username.length > JS_CONFIG.MAX_NAME_LENGTH) {
+        alert(
+          `Username cannot exceed ${JS_CONFIG.MAX_NAME_LENGTH} characters`
+        );
+        return;
+    }
+
+    const { error } =
+      await supabaseClient
+      .from("users")
+      .insert([
+        {
+          username
+        }
+      ]);
+
+    if(error){
+
+        alert(
+          "Username already taken"
+        );
+
+        return;
+    }
+
+    localStorage.setItem(
+      "username",
+      username
+    );
+
+    const language =
+      localStorage.getItem("language")
+      || "en";
+
+    document
+      .getElementById(
+        "welcomeUser"
+      )
+      .textContent = `${t("welcome")}，${username} 😊`;
+
+    document.body.style.overflow =
+      "auto";
+
+    document
+      .getElementById(
+        "usernameModal"
+      )
+      .style.display =
+      "none";
+}
+
+function getLanguage() {
+
+    return (
+      localStorage.getItem("language")
+      || "en"
+    );
+
+}
+
+function t(key) {
+
+    const lang =
+      getLanguage();
+
+    return LANG[lang][key];
+
+}
+
+function setText(id, value){
+
+    const el =
+      document.getElementById(id);
+
+    if(el){
+        el.textContent = value;
+    }
+
+}
+
+function setPlaceholder(id, value){
+
+    const el =
+      document.getElementById(id);
+
+    if(el){
+        el.placeholder = value;
+    }
+
+}
+function applyLanguage() {
+
+    const lang = getLanguage();
+
+    const englishBtn =
+      document.getElementById(
+        "englishBtn"
+      );
+
+    const chineseBtn =
+      document.getElementById(
+        "chineseBtn"
+      );
+
+    if(englishBtn && chineseBtn){
+
+        englishBtn.classList.remove(
+          "active"
+        );
+
+        chineseBtn.classList.remove(
+          "active"
+        );
+
+        if(lang === "en"){
+            englishBtn.classList.add(
+              "active"
+            );
+        }else{
+            chineseBtn.classList.add(
+              "active"
+            );
+        }
+    }
+
+    const langToggle =
+      document.getElementById(
+        "langToggle"
+      );
+
+    if(langToggle){
+
+        langToggle.textContent =
+          lang === "en"
+          ? "中文"
+          : "EN";
+
+    }
+
+    setText("sendWish",t("sendWish"));
+    setText("photoButton",t("uploadPhoto"));
+    setText("blessingsLabel",t("blessings"));
+    setText("memoriesLabel",t("memories"));
+    setText("wishTitle",t("wishesWall"));
+    setText("photoTitle",t("guestMemories"));
+    setText("submitWishTitle",t("weddingWishes"));
+    setPlaceholder("blessingMsg",t("blessingMsg"));
+    setText("submitWish",t("submitWish"));
+    setText("backHome",t("backHome"));
+    setText("submitPhotoTitle",t("submitPhotoTitle"));
+    setText("submitPhoto",t("submitPhoto"));
+    setText("tabWish",t("tabWish"));
+    setText("tabPhoto",t("tabPhoto"));
+    setText("getMarried",t("getMarried"));
+    setText("date",t("date"));
+    setText("hs",t("hs"));
+    setText("ly",t("ly"));
+
+
+    const username =
+      localStorage.getItem(
+        "username"
+      );
+
+    const welcomeUser =
+      document.getElementById(
+        "welcomeUser"
+      );
+
+    if(
+      username &&
+      welcomeUser
+    ){
+        welcomeUser.textContent =
+          `${t("welcome")}，${username} 😊`;
+    }
+
+    if(wishesData.length){
+      showMostLovedWish(wishesData);
+    }
+
+    if(photosData.length){
+        showMostLikedPhoto(photosData);
+    }
+
+    if(photosData.length){
+        showPhoto();
+    }
+}
+
 
 loadWishes();
 
@@ -165,7 +472,7 @@ function launchWish(lane) {
 
           ${
             alreadyLiked
-            ? `❤️ Liked • ${wish.likes || 0}`
+            ? `❤️ ${t("likes")} • ${wish.likes || 0}`
             : `♡ ${wish.likes || 0}`
         }
 
@@ -195,12 +502,12 @@ function showMostLovedWish(data) {
 
     const topWish =
         document.getElementById(
-            "topWish"
+            "mostLovedWish"
         );
 
     topWish.innerHTML = `
         <h3>
-            ⭐ MOST LOVED WISH
+            ${t("mostLovedWish")}
         </h3>
 
         <div class="top-wish-message">
@@ -218,6 +525,7 @@ function showMostLovedWish(data) {
         <br><br>
 
         ❤️ ${mostLoved.likes || 0}
+        ${t("likes")}
 
     `;
 }
@@ -266,14 +574,8 @@ async function likeWish(id) {
 
     if (button) {
     button.disabled = true;
-    button.innerHTML = `❤️ Liked • ${(data.likes || 0) + 1}`;
+    button.innerHTML = `❤️ ${t("likes")} • ${(data.likes || 0) + 1}`;
     }
-
-    // alert(
-    // "❤️ Thank you! Your like has been recorded."
-    // );
-
-    // loadWishes();
 
 }
 
@@ -325,11 +627,11 @@ function showMostLikedPhoto(data) {
       )[0];
 
     document.getElementById(
-      "topPhoto"
+      "mostLovedPhoto"
     ).innerHTML = `
 
       <h3>
-        ⭐ MOST LOVED PHOTO
+        ${t("mostLovedPhoto")}
       </h3>
 
       <img
@@ -337,14 +639,14 @@ function showMostLikedPhoto(data) {
         alt="Most Loved Photo">
 
       <p>
-        📸 Uploaded by
+        📸 ${t("uploadedBy")}
         <strong>
           ${mostLiked.uploader_name || "Guest"}
         </strong>
       </p>
 
       <p>
-        ❤️ ${mostLiked.likes || 0} Likes
+        ❤️ ${mostLiked.likes || 0} ${t("likes")}
       </p>
 
     `;
@@ -382,7 +684,7 @@ function showPhoto() {
             onerror="showPhoto()">
 
           <p class="photo-uploader">
-            Uploaded by
+            ${t("uploadedBy")}
             <strong>
               ${photo.uploader_name || "Guest"}
             </strong>
@@ -405,7 +707,7 @@ function showPhoto() {
 
              ${
                 alreadyLiked
-                  ? `❤️ Liked • ${photo.likes || 0}`
+                  ? `❤️ ${t("likes")} • ${photo.likes || 0}`
                   : `♡ ${photo.likes || 0}`
               }
 
@@ -511,7 +813,7 @@ async function likePhoto(id) {
         button.disabled = true;
 
         button.innerHTML =
-          `❤️ Liked • ${(data.likes || 0) + 1}`;
+          `❤️ ${t("likes")} • ${(data.likes || 0) + 1}`;
     }
 
     // loadPhotos();
@@ -669,3 +971,24 @@ function isOverBlockedArea(x, y) {
 }
 
 setInterval(createDoubleHappiness, 800);
+
+
+/* Language Switching */
+function switchLanguage() {
+
+    const current =
+      getLanguage();
+
+    const next =
+      current === "en"
+      ? "zh"
+      : "en";
+
+    localStorage.setItem(
+      "language",
+      next
+    );
+
+    applyLanguage();
+
+}

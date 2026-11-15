@@ -9,21 +9,17 @@
 <body>
 
     <div class="wish-form-page">
-        <h1>💌 Wedding Wishes</h1>
+        <h1 id="submitWishTitle">💌 Wedding Wishes</h1>
 
-        <input
-            id="name"
-            type="text"
-            placeholder="Your Name">
-
-        <textarea id="message" placeholder="Write your blessing"></textarea>
-        <button id="submitWish" class="wish-button">Submit</button>
+        <textarea id="blessingMsg" placeholder="Write your blessing"></textarea>
+        <button id="submitWish" class="wish-button">Submit Wish</button>
         <button id="backHome" class="secondary-button">Back to Homepage</button>
 
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <script src="app.js"></script>
     <script src="submit-wishes.js"></script>
 </body>
 </html>

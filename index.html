@@ -10,25 +10,38 @@
 <body>
 
     <section class="hero">
-        <div class="overlay">
-            <h3>WE'RE GETTING MARRIED</h3>
+        <div class="language-toggle">
 
-            <h1>
+            <button id="langToggle">
+                EN
+            </button>
+
+        </div>
+        <div class="overlay">
+            <h3 id="getMarried">WE'RE GETTING MARRIED</h3>
+
+            <h1 id="hs">
                 Hong Shiong
+            </h1>
                 <br>
+            <h1>
                 ❤️
+            </h1>
                 <br>
+             <h1 id="ly">
                 Li Yin
             </h1>
 
-            <p>29 November 2026</p>
+            <p id="date">29 November 2026</p>
+
+            <p id="welcomeUser"></p>
 
         </div>
     </section>
 
     <div class="tabs">
-        <a href="#wishes">Wishes</a>
-        <a href="#photos">Photos</a>
+        <a id="tabWish" href="#wishes">Wishes</a>
+        <a id="tabPhoto" href="#photos">Photos</a>
     </div>
 
     <section id="stats">
@@ -39,7 +52,7 @@
 
                 <div id="wishCount">💌 0</div>
 
-                <span>Blessings</span>
+                <span id="blessingsLabel">Blessings</span>
 
             </div>
 
@@ -47,7 +60,7 @@
 
                 <div id="photoCount">📸 0</div>
 
-                <span>Memories</span>
+                <span id="memoriesLabel">Memories</span>
 
             </div>
 
@@ -56,8 +69,8 @@
     </section>
     
     <section id="wishes">
-        <h2>💌 Wishes Wall</h2>
-        <div id="topWish" class="top-wish"></div>
+        <h2 id="wishTitle">💌 Wishes Wall</h2>
+        <div id="mostLovedWish" class="top-wish"></div>
 
         <div id="wishWall" class="wish-wall">
 
@@ -74,7 +87,7 @@
         </div>
 
         <button 
-            id="wishButton"
+            id="sendWish"
             class="wish-button">
             Send Wishes
         </button>
@@ -82,10 +95,10 @@
     </section>
     
     <section id="photos">
-        <h2>📸 Guest Memories</h2>
+        <h2 id="photoTitle">📸 Guest Memories</h2>
 
         <div
-            id="topPhoto"
+            id="mostLovedPhoto"
             class="top-photo">
         </div>
 
@@ -106,7 +119,49 @@
     </section>
 
     <div id="doubleHappinessContainer"></div>
-  
+
+    <div id="usernameModal" class="username-modal">
+
+        <div class="username-box">
+
+            <h2>Welcome 😊 欢迎</h2>
+
+            <div class="language-selector">
+
+                <button
+                id="englishBtn"
+                class="lang-btn">
+                English
+                </button>
+
+                <button
+                id="chineseBtn"
+                class="lang-btn">
+                中文
+                </button>
+
+            </div>
+
+            <p>How can I address you? 怎样称呼您？</p>
+
+            <input
+            id="usernameInput"
+            type="text"
+            placeholder="Your username"
+            >
+
+            <button
+            id="saveUsername"
+            class="wish-button username-button">
+
+            Continue
+
+            </button>
+
+        </div>
+
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="app.js"></script>
