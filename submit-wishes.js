@@ -3,6 +3,16 @@ document
   .addEventListener("click", submitWish);
 
 document
+  .getElementById("backHome")
+  .addEventListener(
+    "click",
+    () => {
+      window.location.href =
+        "./index.html?scroll=wishes";
+    }
+  );
+
+document
   .getElementById("name")
   .maxLength = JS_CONFIG.MAX_NAME_LENGTH;
 

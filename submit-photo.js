@@ -5,6 +5,16 @@ document
     uploadPhoto
   );
 
+document
+  .getElementById("backHome")
+  .addEventListener(
+    "click",
+    () => {
+      window.location.href =
+        "./index.html?scroll=photos";
+    }
+  );
+
   async function uploadPhoto() {
 
     const file =
@@ -78,5 +88,8 @@ document
     }
 
     alert("📸 Upload Success!");
+
+    window.location.href =
+      "./index.html";
 
 }

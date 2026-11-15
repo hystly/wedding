@@ -20,9 +20,16 @@ document
 
 });
 
+// Wish constants
 let wishesData = [];
 let currentWishIndex = 0;
 let wallStarted = false;
+
+// Photo constants
+let photosData = [];
+let currentPhotoIndex = 0;
+let slideshowStarted = false;
+let slideshowTimer = null;
 
 loadWishes();
 
@@ -37,6 +44,23 @@ supabaseClient
     },
     () => {
       loadWishes();
+    }
+  )
+  .subscribe();
+
+loadPhotos();
+
+supabaseClient
+  .channel('photos')
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'photos'
+    },
+    () => {
+      loadPhotos();
     }
   )
   .subscribe();
@@ -59,6 +83,8 @@ async function loadWishes() {
     showMostLovedWish(data);
 
     wishesData = data;
+
+    updateStats();
 
     if (!wallStarted) {
         wallStarted = true;
@@ -251,11 +277,7 @@ async function likeWish(id) {
 
 }
 
-let photosData = [];
-let currentPhotoIndex = 0;
-let photoWallStarted = false;
-
-loadPhotos();
+// Photo section
 
 async function loadPhotos() {
 
@@ -275,36 +297,146 @@ async function loadPhotos() {
 
     photosData = data;
 
-    if (!photoWallStarted) {
-        photoWallStarted = true;
-        startPhotoWall();
+    updateStats();
+
+    showMostLikedPhoto(data);
+
+    if (
+      !slideshowStarted &&
+      data.length
+    ) {
+
+        slideshowStarted = true;
+
+        showPhoto();
+
     }
 }
 
-function startPhotoWall() {
+function showMostLikedPhoto(data) {
 
-  for (
-      let lane = 0;
-      lane < 3;
-      lane++
-  ) {
+    if (!data.length) return;
 
-      setTimeout(() => {
+    const mostLiked =
+      [...data].sort(
+        (a, b) =>
+          (b.likes || 0) -
+          (a.likes || 0)
+      )[0];
 
-          launchPhoto(lane);
+    document.getElementById(
+      "topPhoto"
+    ).innerHTML = `
 
-      }, lane * JS_CONFIG.WISH_INTERVAL);
+      <h3>
+        ⭐ MOST LOVED PHOTO
+      </h3>
 
-  }
+      <img
+        src="${mostLiked.image_url}"
+        alt="Most Loved Photo">
 
+      <p>
+        📸 Uploaded by
+        <strong>
+          ${mostLiked.uploader_name || "Guest"}
+        </strong>
+      </p>
+
+      <p>
+        ❤️ ${mostLiked.likes || 0} Likes
+      </p>
+
+    `;
 }
 
-function launchPhoto(lane) {
+function showPhoto() {
 
-    if (!photosData.length) return;
+    if (!photosData.length) {
+          return;
+      }
 
     const photo =
       photosData[currentPhotoIndex];
+
+    const likedPhotos =
+      JSON.parse(
+        localStorage.getItem(
+          "likedPhotos"
+        ) || "[]"
+      );
+
+    const alreadyLiked =
+      likedPhotos.includes(photo.id);
+
+    document
+      .getElementById(
+        "photoSlideshow"
+      )
+      .innerHTML = `
+
+        <div class="slide-photo">
+
+          <img
+            src="${photo.image_url}"
+            onerror="showPhoto()">
+
+          <p class="photo-uploader">
+            Uploaded by
+            <strong>
+              ${photo.uploader_name || "Guest"}
+            </strong>
+          </p>
+
+          <div class="photo-controls">
+
+          <button
+            class="nav-button"
+            onclick="previousPhoto()">
+
+            ❮
+
+          </button>
+
+          <button
+            class="like-button"
+            ${alreadyLiked ? "disabled" : ""}
+            onclick="likePhoto(${photo.id})">
+
+             ${
+                alreadyLiked
+                  ? `❤️ Liked • ${photo.likes || 0}`
+                  : `♡ ${photo.likes || 0}`
+              }
+
+          </button>
+
+          <button
+            class="nav-button"
+            onclick="nextPhoto()">
+
+            ❯
+
+          </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    clearTimeout(
+      slideshowTimer
+    );
+
+    slideshowTimer =
+      setTimeout(
+        nextPhoto,
+        JS_CONFIG.SLIDESHOW_INTERVAL
+      );
+}
+
+function nextPhoto() {
 
     currentPhotoIndex++;
 
@@ -312,32 +444,228 @@ function launchPhoto(lane) {
       currentPhotoIndex >=
       photosData.length
     ) {
-      currentPhotoIndex = 0;
+        currentPhotoIndex = 0;
     }
 
-    const laneEl =
-      document.getElementById(
-        `photoLane${lane}`
+    showPhoto();
+}
+
+function previousPhoto() {
+
+    currentPhotoIndex--;
+
+    if (
+      currentPhotoIndex < 0
+    ) {
+        currentPhotoIndex =
+          photosData.length - 1;
+    }
+
+    showPhoto();
+}
+
+async function likePhoto(id) {
+
+    const likedPhotos =
+      JSON.parse(
+        localStorage.getItem(
+          "likedPhotos"
+        ) || "[]"
       );
 
-    laneEl.innerHTML = `
-      <div class="floating-photo">
+    if (
+      likedPhotos.includes(id)
+    ) {
+      return;
+    }
 
-        <img
-          src="${photo.image_url}"
-          alt="photo">
+    const { data } =
+      await supabaseClient
+      .from("photos")
+      .select("likes")
+      .eq("id", id)
+      .single();
 
-        <p>
-          ${photo.uploader_name}
-        </p>
+    await supabaseClient
+      .from("photos")
+      .update({
+        likes:
+          (data.likes || 0) + 1
+      })
+      .eq("id", id);
 
-      </div>
-    `;
+    likedPhotos.push(id);
+
+    localStorage.setItem(
+      "likedPhotos",
+      JSON.stringify(likedPhotos)
+    );
+
+    const button =
+      document.querySelector(
+        `button[onclick="likePhoto(${id})"]`
+      );
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.innerHTML =
+          `❤️ Liked • ${(data.likes || 0) + 1}`;
+    }
+
+    // loadPhotos();
+}
+
+
+// Statistics board
+
+function updateStats() {
+
+    const wishCount =
+      wishesData.length;
+
+    const photoCount =
+      photosData.length;
+
+    const wishLikes =
+      wishesData.reduce(
+        (sum, wish) =>
+          sum + (wish.likes || 0),
+        0
+      );
+
+    const photoLikes =
+      photosData.reduce(
+        (sum, photo) =>
+          sum + (photo.likes || 0),
+        0
+      );
+
+    document.getElementById(
+      "wishCount"
+    ).textContent =
+      `💌 ${wishCount}`;
+
+    document.getElementById(
+      "photoCount"
+    ).textContent =
+      `📸 ${photoCount}`;
+}
+
+/* Back to homepage */
+
+window.addEventListener(
+  "load",
+  () => {
+
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const target =
+        params.get("scroll");
+
+      if (!target) return;
+
+      setTimeout(() => {
+
+          document
+            .getElementById(target)
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+      }, 1000);
+
+  }
+);
+
+/* Double Happiness Animation */
+
+const container =
+    document.getElementById(
+        "doubleHappinessContainer"
+    );
+
+function createDoubleHappiness() {
+
+    const item =
+        document.createElement("div");
+
+    item.className =
+        "double-happiness";
+
+    if (Math.random() > 0.5) {
+
+        item.textContent = "囍";
+
+        item.style.color =
+            "rgba(184,138,68,.3)";
+
+        item.style.fontSize = "34px";
+
+    } else {
+
+        item.textContent = "♡";
+
+        item.style.color =
+            "rgba(184,138,68,.3)";
+
+        item.style.fontSize = "30px";
+    }
+
+    item.style.left =
+        Math.random() *
+        window.innerWidth +
+        "px";
+
+    item.style.animationDuration =
+        (10 + Math.random() * 10)
+        + "s";
+
+    document.body.appendChild(item);
 
     setTimeout(() => {
-
-      launchPhoto(lane);
-
-    }, JS_CONFIG.WISH_INTERVAL);
+        item.remove();
+    }, 20000);
 
 }
+
+
+function isOverBlockedArea(x, y) {
+    const blocked = document.querySelectorAll(
+        '#stats, .wish-wall, .top-wish, #photos'
+    );
+
+    for (const el of blocked) {
+        const rect = el.getBoundingClientRect();
+
+        const pageTop =
+            rect.top + window.scrollY;
+
+        const pageBottom =
+            rect.bottom + window.scrollY;
+
+        const pageLeft =
+            rect.left;
+
+        const pageRight =
+            rect.right;
+
+        if (
+            x >= pageLeft &&
+            x <= pageRight &&
+            y >= pageTop &&
+            y <= pageBottom
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+setInterval(createDoubleHappiness, 800);
