@@ -429,13 +429,12 @@ function startWall() {
     }
 
 }
-
 function launchWish(lane) {
 
     if (!wishesData.length) return;
 
     const wish =
-        getNextWish();
+      getNextWish();
 
     const likedWishes =
       JSON.parse(
@@ -445,48 +444,60 @@ function launchWish(lane) {
       );
 
     const alreadyLiked =
-      likedWishes.includes(wish.id);
+      likedWishes.includes(
+        wish.id
+      );
 
     const laneEl =
       document.getElementById(
         `lane${lane}`
       );
 
-    laneEl.innerHTML = `
-      <div class="floating-wish">
+    const card =
+      document.createElement(
+        "div"
+      );
 
-        <strong>
-          ${wish.name}
-        </strong>
+    card.className =
+      "floating-wish";
 
-        <br><br>
+    card.innerHTML = `
+      <strong>
+        ${wish.name}
+      </strong>
 
-        ${wish.message}
+      <br><br>
 
-        <br><br>
+      ${wish.message}
 
-        <button
-          class="like-button"
-          ${alreadyLiked ? "disabled" : ""}
-          onclick="likeWish(${wish.id})">
+      <br><br>
 
-          ${
-            alreadyLiked
-            ? `❤️ ${t("likes")} • ${wish.likes || 0}`
-            : `♡ ${wish.likes || 0}`
+      <button
+        class="like-button"
+        ${alreadyLiked ? "disabled" : ""}
+        onclick="likeWish(${wish.id})">
+
+        ${
+          alreadyLiked
+          ? `❤️ ${wish.likes || 0} ${t("likes")}`
+          : `♡ ${wish.likes || 0} ${t("likes")}`
         }
 
-        </button>
-
-      </div>
+      </button>
     `;
+
+    laneEl.appendChild(card);
+
+    card.addEventListener(
+      "animationend",
+      () => card.remove()
+    );
 
     setTimeout(() => {
 
-    launchWish(lane);
+        launchWish(lane);
 
     }, JS_CONFIG.WISH_INTERVAL);
-
 }
 
 function showMostLovedWish(data) {
