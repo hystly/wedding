@@ -93,6 +93,7 @@ window.addEventListener(
   applyLanguage
 );
 
+
 function checkUsername(){
 
   const username =
@@ -418,7 +419,10 @@ function getNextWish() {
 
 function startWall() {
 
-    for (let lane = 0; lane < JS_CONFIG.LANE_COUNT; lane++) {
+    const laneCount =
+    window.innerWidth < 768 ? JS_CONFIG.MIN_LANE_COUNT: JS_CONFIG.LANE_COUNT;
+
+    for (let lane = 0; lane < laneCount; lane++) {
 
         setTimeout(() => {
 

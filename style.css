@@ -303,7 +303,7 @@ section {
 
     position: relative;
 
-    height: 1200px;
+    height: 1450px;
 
     overflow: hidden;
 
@@ -473,23 +473,23 @@ section {
 
     }
 
+    
+
 }
 
 .lane {
     position: absolute;
-    left: -400px;
-
-    width: calc(100% + 800px);
-
-    height: 260px;
-
-    overflow: visible;
+    left: 0;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
 }
+
 #lane0 { top: 20px; }
-#lane1 { top: 230px; }
-#lane2 { top: 440px; }
-#lane3 { top: 650px; }
-#lane4 { top: 860px; }
+#lane1 { top: 280px; }
+#lane2 { top: 540px; }
+#lane3 { top: 800px; }
+#lane4 { top: 1060px; }
 
 /* Wish Form Page */
 .wish-form-page {
@@ -567,6 +567,31 @@ section {
     .wish-button {
         width: calc(100vw - 24px);
         max-width: none;
+    }
+
+    .wish-wall{
+        height: 700px;
+    }
+
+    .lane{
+        height:220px;
+    }
+
+    #lane0{
+        top:20px;
+    }
+
+    #lane1{
+        top:240px;
+    }
+
+    #lane2{
+        top:460px;
+    }
+
+    #lane3,
+    #lane4{
+        display:none;
     }
 
 }
@@ -1177,45 +1202,3 @@ section {
 
     color: white;
 }
-
-englishBtn.addEventListener(
-  "click",
-  () => {
-
-      localStorage.setItem(
-        "language",
-        "en"
-      );
-
-      englishBtn.classList.add(
-        "active"
-      );
-
-      chineseBtn.classList.remove(
-        "active"
-      );
-
-      applyLanguage();
-  }
-);
-
-chineseBtn.addEventListener(
-  "click",
-  () => {
-
-      localStorage.setItem(
-        "language",
-        "zh"
-      );
-
-      chineseBtn.classList.add(
-        "active"
-      );
-
-      englishBtn.classList.remove(
-        "active"
-      );
-
-      applyLanguage();
-  }
-);
