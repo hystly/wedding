@@ -1,5 +1,30 @@
 console.log("app.js loaded");
 
+document.documentElement.style.setProperty(
+    "--wish-wall-height",
+    `${JS_CONFIG.WISH_WALL_HEIGHT}px`
+);
+
+document.documentElement.style.setProperty(
+    "--photo-wall-height",
+    `${JS_CONFIG.PHOTO_WALL_HEIGHT}px`
+);
+
+document.documentElement.style.setProperty(
+    "--slide-img-max-height",
+    `${JS_CONFIG.SLIDE_IMG_MAX_HEIGHT}vh`
+);
+
+document.documentElement.style.setProperty(
+    "--uploader-btm-height",
+    `${JS_CONFIG.UPLOADER_BTM_HEIGHT}px`
+);
+
+document.documentElement.style.setProperty(
+    "--photo-nav-butt",
+    `${JS_CONFIG.PHOTO_NAV_BUTT}px`
+);
+
 document
   .getElementById("englishBtn")
   .addEventListener(
@@ -83,6 +108,7 @@ let selectedLanguage = "en";
 window.addEventListener(
   "load",
   () => {
+  setupLanes();
   checkUsername();
   applyLanguage();
   }
@@ -415,6 +441,19 @@ function getNextWish() {
     }
 
     return wish;
+}
+
+function setupLanes() {
+
+    document
+      .querySelectorAll(".lane")
+      .forEach((lane,index)=>{
+
+        lane.style.top =
+          `${20 + index * 260}px`;
+
+    });
+
 }
 
 function startWall() {
