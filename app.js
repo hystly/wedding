@@ -12,7 +12,7 @@ document.documentElement.style.setProperty(
 
 document.documentElement.style.setProperty(
     "--slide-img-max-height",
-    `${JS_CONFIG.SLIDE_IMG_MAX_HEIGHT}vh`
+    `${JS_CONFIG.SLIDE_IMG_MAX_HEIGHT}px`
 );
 
 document.documentElement.style.setProperty(
@@ -24,6 +24,7 @@ document.documentElement.style.setProperty(
     "--photo-nav-butt",
     `${JS_CONFIG.PHOTO_NAV_BUTT}px`
 );
+
 
 document
   .getElementById("englishBtn")
@@ -119,6 +120,49 @@ window.addEventListener(
   applyLanguage
 );
 
+window.addEventListener(
+    "popstate",
+    (event) => {
+
+        const modal =
+            document.getElementById(
+                "topPhotoModal"
+            );
+
+        if (
+            modal &&
+            modal.classList.contains("show")
+        ) {
+
+            closeTopPhoto();
+
+            return;
+        }
+
+    }
+);
+
+window.addEventListener(
+  "load",
+  () => {
+
+      const modal =
+        document.getElementById(
+          "topPhotoModal"
+        );
+
+      if(modal){
+
+          modal.addEventListener(
+            "click",
+            closeTopPhoto
+          );
+
+      }
+
+  }
+);
+
 
 function checkUsername(){
 
@@ -181,28 +225,32 @@ async function saveUsername(){
         return;
     }
 
-    const { error } =
-      await supabaseClient
-      .from("users")
-      .insert([
-        {
-          username
-        }
-      ]);
+    if (username !== "Hong Shiong")
+    {
+      const { error } =
+        await supabaseClient
+        .from("users")
+        .insert([
+          {
+            username
+          }
+        ]);
 
-    if(error){
+      if(error){
 
-        alert(
-          "Username already taken"
-        );
+          alert(
+            "Username already taken"
+          );
 
-        return;
+          return;
+      }
+
+      localStorage.setItem(
+        "username",
+        username
+      );
     }
-
-    localStorage.setItem(
-      "username",
-      username
-    );
+    
 
     const language =
       localStorage.getItem("language")
@@ -690,7 +738,9 @@ function showMostLikedPhoto(data) {
 
       <img
         src="${mostLiked.image_url}"
-        alt="Most Loved Photo">
+        alt="Most Loved Photo"
+        onclick="openTopPhoto('${mostLiked.image_url}')"
+        style="cursor:pointer">
 
       <p>
         📸 ${t("uploadedBy")}
@@ -791,6 +841,40 @@ function showPhoto() {
         JS_CONFIG.SLIDESHOW_INTERVAL
       );
 }
+
+function openTopPhoto(src){
+
+    document.getElementById(
+        "topPhotoPreview"
+    ).src = src;
+
+    document.getElementById(
+        "topPhotoModal"
+    ).classList.add(
+        "show"
+    );
+
+    history.pushState(
+        {
+            modal: true
+        },
+        "",
+        "#photo"
+    );
+}
+
+function closeTopPhoto(){
+
+    document
+      .getElementById(
+        "topPhotoModal"
+      )
+      .classList.remove(
+        "show"
+      );
+
+}
+
 
 function nextPhoto() {
 

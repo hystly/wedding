@@ -800,6 +800,10 @@ section {
         white-space: nowrap;
     }
 
+    .top-photo img{
+        width: 90px;
+    }
+
 }
 
 /* submit photo page */
@@ -1179,4 +1183,34 @@ section {
       );
 
     color: white;
+}
+
+
+/* zoom in top photo */
+
+.image-modal {
+
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.85);
+
+    z-index: 99999;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.image-modal.show {
+    display: flex;
+}
+
+.image-modal img {
+
+    max-width: 95vw;
+    max-height: 95vh;
+
+    border-radius: 12px;
 }
