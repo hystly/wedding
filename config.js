@@ -62,7 +62,7 @@ const LANG = {
     mostLovedPhoto: "⭐ MOST LOVED PHOTO",
 
     uploadedBy: "Uploaded by",
-    likes: "Likes",
+    likes: "Like",
 
     continue: "Continue",
 

@@ -922,7 +922,7 @@ function showPhoto() {
 
              ${
                 alreadyLiked
-                  ? `❤️ ${t("likes")} • ${photo.likes || 0}`
+                  ? `❤️ ${photo.likes || 0} ${t("likes")}`
                   : `♡ ${photo.likes || 0}`
               }
 
@@ -1062,7 +1062,7 @@ async function likePhoto(id) {
         button.disabled = true;
 
         button.innerHTML =
-          `❤️ ${t("likes")} • ${(data.likes || 0) + 1}`;
+          `❤️ ${(data.likes || 0) + 1} ${t("likes")}`;
     }
 
     // loadPhotos();
