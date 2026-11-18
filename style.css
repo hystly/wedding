@@ -431,7 +431,7 @@ section {
 .floating-wish {
 
     position: absolute;
-
+    font-size: 1.4rem;
     left: -420px;
 
     width: min(
@@ -594,7 +594,7 @@ section {
 
     cursor: pointer;
 
-    font-size: 0.95rem;
+    font-size: 1.2rem;
 
     transition: .3s;
 }
