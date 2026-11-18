@@ -103,13 +103,14 @@ let currentPhotoIndex = 0;
 let slideshowStarted = false;
 let slideshowTimer = null;
 
+let occupiedAreas = [];
+
 /* Language Selection */
 let selectedLanguage = "en";
 
 window.addEventListener(
   "load",
   () => {
-  setupLanes();
   checkUsername();
   applyLanguage();
   }
@@ -474,6 +475,64 @@ async function loadWishes() {
     }
 }
 
+function overlaps(
+    top,
+    height
+){
+
+    const spacing = 15;
+
+    return occupiedAreas.some(area =>
+
+        top <
+            area.bottom + spacing &&
+
+        top + height >
+            area.top - spacing
+
+    );
+}
+
+function findFreePosition(
+    cardHeight
+){
+
+    const wall =
+        document.querySelector(
+            ".wish-wall"
+        );
+
+    const wallHeight =
+        wall.clientHeight;
+
+    let tries = 0;
+
+    while(tries < 50){
+
+        const top =
+        20 +
+        Math.random() *
+        (
+            wallHeight -
+            cardHeight -
+            40
+        );
+
+        if(
+            !overlaps(
+                top,
+                cardHeight
+            )
+        ){
+            return top;
+        }
+
+        tries++;
+    }
+
+    return null;
+}
+
 function getNextWish() {
 
     const wish =
@@ -491,35 +550,19 @@ function getNextWish() {
     return wish;
 }
 
-function setupLanes() {
-
-    document
-      .querySelectorAll(".lane")
-      .forEach((lane,index)=>{
-
-        lane.style.top =
-          `${20 + index * 260}px`;
-
-    });
-
-}
 
 function startWall() {
 
-    const laneCount =
-    window.innerWidth < 768 ? JS_CONFIG.MIN_LANE_COUNT: JS_CONFIG.LANE_COUNT;
+    launchWish(0);
 
-    for (let lane = 0; lane < laneCount; lane++) {
+    setTimeout(() => launchWish(1), 1000);
 
-        setTimeout(() => {
+    setTimeout(() => launchWish(2), 2000);
 
-            launchWish(lane);
-
-        }, lane * 3000);
-
-    }
+    setTimeout(() => launchWish(3), 3000);
 
 }
+
 function launchWish(lane) {
 
     if (!wishesData.length) return;
@@ -539,10 +582,10 @@ function launchWish(lane) {
         wish.id
       );
 
-    const laneEl =
-      document.getElementById(
-        `lane${lane}`
-      );
+    const wishWall =
+    document.querySelector(
+        ".wish-wall"
+    );
 
     const card =
       document.createElement(
@@ -577,12 +620,57 @@ function launchWish(lane) {
       </button>
     `;
 
-    laneEl.appendChild(card);
+    card.style.visibility = "hidden";
+
+    wishWall.appendChild(card);
+
+    const cardHeight =
+        card.offsetHeight;
+
+    const top =
+        findFreePosition(
+            cardHeight
+        );
+
+    if(top === null){
+
+        card.remove();
+
+        setTimeout(
+            () => launchWish(lane),
+            1000
+        );
+
+        return;
+    }
+
+    occupiedAreas.push({
+        element: card,
+        top,
+        bottom:
+          top + cardHeight
+    });
+
+    card.style.top =
+        `${top}px`;
+
+    card.style.visibility =
+        "visible";
 
     card.addEventListener(
-      "animationend",
-      () => card.remove()
+        "animationend",
+        () => {
+
+            occupiedAreas =
+                occupiedAreas.filter(
+                    area =>
+                        area.element !== card
+                );
+
+            card.remove();
+        }
     );
+
 
     setTimeout(() => {
 

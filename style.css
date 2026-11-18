@@ -432,7 +432,7 @@ section {
 
     position: absolute;
 
-    left: -350px;
+    left: -420px;
 
     width: min(
       320px,
@@ -448,7 +448,7 @@ section {
     box-shadow:
         0 8px 24px rgba(0,0,0,.12);
 
-    animation: drift 30s linear forwards;
+    animation: drift 25s linear forwards;
 
     text-align: center;
 
