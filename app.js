@@ -104,6 +104,7 @@ let slideshowStarted = false;
 let slideshowTimer = null;
 
 let occupiedAreas = [];
+let wishQueue = [];
 
 /* Language Selection */
 let selectedLanguage = "en";
@@ -467,6 +468,10 @@ async function loadWishes() {
 
     wishesData = data;
 
+    if (wishQueue.length === 0) {
+        wishQueue = [...data];
+    }
+
     updateStats();
 
     if (!wallStarted) {
@@ -535,19 +540,13 @@ function findFreePosition(
 
 function getNextWish() {
 
-    const wish =
-        wishesData[currentWishIndex];
+    if (wishQueue.length === 0) {
 
-    currentWishIndex++;
+        wishQueue = [...wishesData];
 
-    if (
-        currentWishIndex >=
-        wishesData.length
-    ) {
-        currentWishIndex = 0;
     }
 
-    return wish;
+    return wishQueue.shift();
 }
 
 
@@ -635,6 +634,8 @@ function launchWish(lane) {
     if(top === null){
 
         card.remove();
+
+        wishQueue.push(wish);
 
         setTimeout(
             () => launchWish(lane),
