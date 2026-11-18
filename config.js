@@ -31,6 +31,10 @@ const JS_CONFIG = {
     TOP_MARGIN: 100,
     LANE_HEIGHT: 260,
     LANE_GAP: 20,
+
+    WISH_CARD_FONT_SIZE: 1.4, 
+    TOP_WISH_MSG_FONT_SIZE: 1.8,
+    LIKE_BUTT_FONT_SIZE: 1.2,
 };
 
 const LANG = {

@@ -25,6 +25,20 @@ document.documentElement.style.setProperty(
     `${JS_CONFIG.PHOTO_NAV_BUTT}px`
 );
 
+document.documentElement.style.setProperty(
+    "--wish-card-font-size",
+    `${JS_CONFIG.WISH_CARD_FONT_SIZE}rem`
+);
+
+document.documentElement.style.setProperty(
+    "--like-butt-font-size",
+    `${JS_CONFIG.LIKE_BUTT_FONT_SIZE}rem`
+);
+
+document.documentElement.style.setProperty(
+    "--top-wish-msg-font-size",
+    `${JS_CONFIG.TOP_WISH_MSG_FONT_SIZE}rem`
+);
 
 document
   .getElementById("englishBtn")
@@ -712,21 +726,19 @@ function showMostLovedWish(data) {
         </h3>
 
         <div class="top-wish-message">
-
             "${mostLoved.message}"
-
         </div>
 
-        <strong>
-
+        <div class="top-wish-name">
             - ${mostLoved.name} -
-
-        </strong>
+        </div>
 
         <br><br>
 
-        ❤️ ${mostLoved.likes || 0}
-        ${t("likes")}
+        <div class="top-wish-likes">
+          ❤️ ${mostLoved.likes || 0}
+          ${t("likes")}
+        </div>
 
     `;
 }
