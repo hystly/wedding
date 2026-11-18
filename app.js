@@ -651,6 +651,16 @@ function launchWish(lane) {
           top + cardHeight
     });
 
+    setTimeout(() => {
+
+        occupiedAreas =
+            occupiedAreas.filter(
+                area =>
+                    area.element !== card
+            );
+
+    }, 12000);
+
     card.style.top =
         `${top}px`;
 
