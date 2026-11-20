@@ -4,6 +4,12 @@ document.getElementById("loginContainer");
 const adminContainer =
 document.getElementById("adminContainer");
 
+const tableSorts = {
+    users: "id",
+    wishes: "id",
+    photos: "id"
+};
+
 window.addEventListener(
     "load",
     () => {
@@ -16,6 +22,25 @@ window.addEventListener(
         if(loggedIn === "true"){
             showAdmin();
         }
+    }
+);
+
+window.addEventListener(
+    "popstate",
+    () => {
+
+        const modal =
+        document.getElementById(
+            "photoModal"
+        );
+
+        if(
+            modal.style.display ===
+            "flex"
+        ){
+            closePhoto();
+        }
+
     }
 );
 
@@ -110,6 +135,10 @@ async function loadTable(
         .from(tableName)
         .select("*");
 
+    if(data){
+        applySort(data, tableName);
+    }
+
     if(error){
 
         document.getElementById(
@@ -157,7 +186,42 @@ function createTable(data){
     html += "<th>Select</th>";
 
     columns.forEach(col => {
-        html += `<th>${col}</th>`;
+
+        if( col === "name" ||
+            col === "username" ||
+            col === "uploader_name"
+        ){
+
+            let icon = "↕";
+            const sortMode =
+            tableSorts[data[0]._table];
+
+            if(sortMode === "asc"){
+                icon = "▲";
+            }
+
+            if(sortMode === "desc"){
+                icon = "▼";
+            }
+
+            html += `
+            <th>
+                ${col}
+                <span
+                    class="sort-btn"
+                    onclick="toggleSort('${data[0]._table}')"
+                >
+                    ${icon}
+                </span>
+            </th>
+            `;
+
+        }else{
+
+            html += `<th>${col}</th>`;
+
+        }
+
     });
 
     html += "</tr>";
@@ -179,9 +243,28 @@ function createTable(data){
 
         columns.forEach(col => {
 
-            html += `
+            if(
+                col === "image_url" &&
+                row[col]
+            ){
+
+                html += `
+                <td>
+                    <button
+                        onclick="openPhoto('${row[col]}')"
+                    >
+                        View Photo
+                    </button>
+                </td>
+                `;
+
+            }else{
+
+                html += `
                 <td>${row[col]}</td>
-            `;
+                `;
+
+            }
 
         });
 
@@ -282,3 +365,120 @@ async function deleteSelected(){
 
     loadAllTables();
 }
+
+function applySort(data, tableName){
+
+    const sortMode =
+        tableSorts[tableName];
+
+    let sortField;
+
+    if(tableName === "users"){
+        sortField = "username";
+    }
+    else if(tableName === "wishes"){
+        sortField = "name";
+    }
+    else if(tableName === "photos"){
+        sortField = "uploader_name";
+    }
+
+    if(sortMode === "asc"){
+
+        data.sort((a,b)=>
+            String(a[sortField] || "")
+            .localeCompare(
+                String(b[sortField] || ""),
+                "zh-Hans"
+            )
+        );
+
+    }
+    else if(sortMode === "desc"){
+
+        data.sort((a,b)=>
+            String(b[sortField] || "")
+            .localeCompare(
+                String(a[sortField] || ""),
+                "zh-Hans"
+            )
+        );
+
+    }
+    else{
+
+        data.sort((a,b)=>a.id-b.id);
+
+    }
+
+}
+
+
+function toggleSort(tableName){
+
+    const current =
+        tableSorts[tableName];
+
+    if(current === "id"){
+
+        tableSorts[tableName] = "asc";
+
+    }
+    else if(current === "asc"){
+
+        tableSorts[tableName] = "desc";
+
+    }
+    else{
+
+        tableSorts[tableName] = "id";
+
+    }
+
+    loadAllTables();
+
+}
+
+function openPhoto(url){
+
+    const modal =
+    document.getElementById(
+        "photoModal"
+    );
+
+    document.getElementById(
+        "modalImage"
+    ).src = url;
+
+    modal.style.display =
+    "flex";
+
+    history.pushState(
+        { photoOpen:true },
+        ""
+    );
+
+}
+
+function closePhoto(){
+
+    document.getElementById(
+        "photoModal"
+    ).style.display =
+    "none";
+
+}
+
+document.addEventListener(
+    "click",
+    e => {
+
+        if(
+            e.target.id === "closePhoto"
+        ){
+            closePhoto();
+        }
+
+    }
+);
+

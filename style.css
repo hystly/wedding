@@ -6,14 +6,14 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f8efe2;
+    background: #eadfc9;
 }
 
 .hero {
     height: 100vh;
-    background-image: url("./images/hero-2.jpeg");
+    background-image: url("./images/hero.jpeg");
     background-size: cover;
-    background-position: 55% center;
+    background-position: 55% 20%;
     position: relative;
 }
 
@@ -74,8 +74,8 @@ p {
     background:
       linear-gradient(
         180deg,
-        #c3a661,
-        #b88a44
+        #ae8a45,
+        #996b2f
       );
 
     backdrop-filter: blur(12px);
@@ -91,6 +91,8 @@ p {
     text-decoration: none;
     position: relative;
     color: white;
+
+    font-size: 1.4rem;
 
     padding: 6px 20px;
 
@@ -296,7 +298,6 @@ section {
 
 #wishes {
     padding: 80px 20px;
-    background: #f8efe2;
 }
 
 .wish-wall {
@@ -632,6 +633,7 @@ section {
 #wishes,
 #photos {
     scroll-margin-top: 60px;
+    background: #eadfc9;
 }
 
 #wishes h2,
@@ -684,8 +686,6 @@ section {
 }
 
 #photos {
-
-    background: #f8efe2;
     padding-top: 40px;
 
 }

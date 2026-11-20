@@ -82,3 +82,50 @@ th{
     overflow-x:auto;
     margin-top:10px;
 }
+
+/* 固定第1栏 Select */
+table th:first-child,
+table td:first-child{
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 2;
+}
+
+/* Select 标题栏 */
+table th:first-child{
+    z-index: 3;
+    background: #ececec;
+}
+
+.sort-btn{
+    cursor:pointer;
+    margin-left:5px;
+    color:#007bff;
+    font-weight:bold;
+}
+
+#photoModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+#modalImage{
+    max-width:95%;
+    max-height:90%;
+    object-fit:contain;
+}
+
+#closePhoto{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:40px;
+    color:white;
+    cursor:pointer;
+}
