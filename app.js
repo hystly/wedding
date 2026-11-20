@@ -243,29 +243,27 @@ async function saveUsername(){
 
     if (username !== "Hong Shiong")
     {
-      const { error } =
-        await supabaseClient
-        .from("users")
-        .insert([
-          {
-            username
-          }
-        ]);
+        const { error } =
+            await supabaseClient
+            .from("users")
+            .insert([
+                { username }
+            ]);
 
-      if(error){
+        if(error){
 
-          alert(
-            "Username already taken"
-          );
+            alert(
+                "Username already taken"
+            );
 
-          return;
-      }
+            return;
+        }
+    }
 
-      localStorage.setItem(
+    localStorage.setItem(
         "username",
         username
-      );
-    }
+    );
     
 
     const language =
