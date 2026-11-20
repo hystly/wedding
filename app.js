@@ -745,58 +745,6 @@ function showMostLovedWish(data) {
 
     `;
 }
-/*
-async function likeWish(id) {
-
-    alert("LIKE CLICKED " + id);
-
-    const likedWishes =
-    JSON.parse(
-      localStorage.getItem(
-        "likedWishes"
-      ) || "[]"
-    );
-
-    const { data, error } =
-        await supabaseClient
-        .from("wishes")
-        .select("likes")
-        .eq("id", id)
-        .single();
-
-    if (error) {
-        console.error(error);
-        return;
-    }
-
-    await supabaseClient
-        .from("wishes")
-        .update({
-        likes: (data.likes || 0) + 1
-        })
-        .eq("id", id);
-
-    likedWishes.push(id);
-
-    localStorage.setItem(
-        "likedWishes",
-        JSON.stringify(likedWishes)
-    );
-
-    const button =
-    document.querySelector(
-        `button[onclick="likeWish(${id})"]`
-    );
-
-    console.log("BUTTON:", button);
-
-    if (button) {
-      button.disabled = true;
-      button.innerHTML =
-      `❤️ ${(data.likes || 0) + 1} ${t("likes")}`;
-    }
-
-}*/
 
 async function likeWish(id) {
 
@@ -1300,3 +1248,24 @@ function switchLanguage() {
     applyLanguage();
 
 }
+
+function openQr(){
+
+    document
+      .getElementById("qrModal")
+      .classList.add("show");
+
+}
+
+document
+.getElementById("qrModal")
+?.addEventListener(
+    "click",
+    () => {
+
+        document
+          .getElementById("qrModal")
+          .classList.remove("show");
+
+    }
+);
