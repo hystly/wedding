@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wedding Admin</title>
+
+<link rel="stylesheet" href="admin.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="../config.js"></script>
+</head>
+
+<body>
+
+<div id="loginContainer">
+
+    <h1>Admin Login</h1>
+
+    <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter Password"
+    >
+
+    <button onclick="checkPassword()">
+        Login
+    </button>
+
+</div>
+
+<div id="adminContainer" style="display:none;">
+
+    <h1>Wedding Admin Dashboard</h1>
+
+    <div id="stats">
+        Loading...
+    </div>
+
+    <button id="deleteSelectedBtn"
+        onclick="deleteSelected()">
+        🗑 Delete Selected
+    </button>
+
+    <details open>
+        <summary id="usersSummary">
+            Users
+        </summary>
+
+        <div id="usersTable">
+            Loading...
+        </div>
+    </details>
+
+    <details>
+        <summary id="wishesSummary">
+            Wishes
+        </summary>
+
+        <div id="wishesTable">
+            Loading...
+        </div>
+    </details>
+
+    <details>
+        <summary id="photosSummary">
+            Photos
+        </summary>
+
+        <div id="photosTable">
+            Loading...
+        </div>
+    </details>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
