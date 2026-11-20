@@ -241,7 +241,12 @@ async function saveUsername(){
         return;
     }
 
-    if (username !== "Hong Shiong")
+    const SUPER_USERS = [
+        "Hong Shiong",
+        "LY"
+    ];
+
+    if (!SUPER_USERS.includes(username))
     {
         const { error } =
             await supabaseClient
@@ -740,10 +745,10 @@ function showMostLovedWish(data) {
 
     `;
 }
-
+/*
 async function likeWish(id) {
 
-     console.log("LIKE CLICKED", id);
+    alert("LIKE CLICKED " + id);
 
     const likedWishes =
     JSON.parse(
@@ -783,11 +788,67 @@ async function likeWish(id) {
         `button[onclick="likeWish(${id})"]`
     );
 
+    console.log("BUTTON:", button);
+
     if (button) {
-    button.disabled = true;
-    button.innerHTML = `❤️ ${t("likes")} • ${(data.likes || 0) + 1}`;
+      button.disabled = true;
+      button.innerHTML =
+      `❤️ ${(data.likes || 0) + 1} ${t("likes")}`;
     }
 
+}*/
+
+async function likeWish(id) {
+
+    const button =
+    document.querySelector(
+        `button[onclick="likeWish(${id})"]`
+    );
+
+    if(button){
+
+        const match =
+        button.textContent.match(/\d+/);
+
+        const currentLikes =
+        match ? parseInt(match[0]) : 0;
+
+        button.disabled = true;
+
+        button.innerHTML =
+        `❤️ ${currentLikes + 1} ${t("likes")}`;
+    }
+
+    const likedWishes =
+    JSON.parse(
+      localStorage.getItem(
+        "likedWishes"
+      ) || "[]"
+    );
+
+    likedWishes.push(id);
+
+    localStorage.setItem(
+      "likedWishes",
+      JSON.stringify(
+        likedWishes
+      )
+    );
+
+    const { data } =
+    await supabaseClient
+      .from("wishes")
+      .select("likes")
+      .eq("id", id)
+      .single();
+
+    await supabaseClient
+      .from("wishes")
+      .update({
+          likes:
+          (data.likes || 0) + 1
+      })
+      .eq("id", id);
 }
 
 // Photo section

@@ -10,6 +10,54 @@ const tableSorts = {
     photos: "id"
 };
 
+document
+.getElementById("resetLikes")
+?.addEventListener("click", () => {
+
+    if(
+        !confirm(
+            "Clear local likes cache?"
+        )
+    ){
+        return;
+    }
+
+    localStorage.removeItem(
+        "likedWishes"
+    );
+
+    localStorage.removeItem(
+        "likedPhotos"
+    );
+
+    alert(
+        "Likes cache cleared!"
+    );
+
+});
+
+document
+.getElementById("resetUsername")
+?.addEventListener("click", () => {
+
+    if(
+        !confirm(
+            "Clear saved username?"
+        )
+    ){
+        return;
+    }
+
+    localStorage.removeItem(
+        "username"
+    );
+
+    alert(
+        "Username cleared!"
+    );
+
+});
+
 window.addEventListener(
     "load",
     () => {
